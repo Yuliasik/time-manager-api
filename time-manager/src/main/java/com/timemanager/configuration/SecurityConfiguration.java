@@ -1,7 +1,7 @@
 package com.timemanager.configuration;
 
-import com.timemanager.session.SessionFilter;
-import com.timemanager.user.CurrentUserService;
+import com.timemanager.security.currentuser.CurrentUserService;
+import com.timemanager.security.session.SessionFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -74,8 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         config.addAllowedOrigin(crossOriginUrl);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-//        TODO: replace /** with /api/** when all endpoints will be ready
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
 

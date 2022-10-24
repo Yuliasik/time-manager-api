@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("test")
+@RequestMapping("/api/test")
 public class TestController {
 
     private final TestService testService;

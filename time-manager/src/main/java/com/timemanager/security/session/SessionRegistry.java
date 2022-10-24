@@ -1,4 +1,4 @@
-package com.timemanager.session;
+package com.timemanager.security.session;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

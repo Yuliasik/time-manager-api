@@ -1,4 +1,4 @@
-package com.timemanager.dto;
+package com.timemanager.user;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-//    TODO: Add new fields for user (id add or not?)
+    //    TODO: Add new fields for user (id add or not?)
     private String username;
     private String password;
 

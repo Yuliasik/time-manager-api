@@ -1,4 +1,4 @@
-package com.timemanager.user;
+package com.timemanager.security.currentuser;
 
 import lombok.Builder;
 import lombok.Getter;

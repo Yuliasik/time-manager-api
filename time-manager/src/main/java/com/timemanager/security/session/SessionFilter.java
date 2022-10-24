@@ -1,6 +1,6 @@
-package com.timemanager.session;
+package com.timemanager.security.session;
 
-import com.timemanager.user.CurrentUserService;
+import com.timemanager.security.currentuser.CurrentUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;

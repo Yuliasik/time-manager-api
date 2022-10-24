@@ -1,5 +1,7 @@
-package com.timemanager.user;
+package com.timemanager.security.currentuser;
 
+import com.timemanager.user.UserEntity;
+import com.timemanager.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

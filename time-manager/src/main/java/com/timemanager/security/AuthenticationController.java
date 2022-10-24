@@ -1,8 +1,9 @@
-package com.timemanager.rest;
+package com.timemanager.security;
 
-import com.timemanager.dto.SessionHolder;
-import com.timemanager.dto.UserDTO;
-import com.timemanager.session.SessionRegistry;
+import com.timemanager.exception.UserAlreadyExistException;
+import com.timemanager.security.session.SessionHolderDTO;
+import com.timemanager.security.session.SessionRegistry;
+import com.timemanager.user.UserDTO;
 import com.timemanager.user.UserEntity;
 import com.timemanager.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -26,20 +27,26 @@ public class AuthenticationController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<SessionHolder> login(@RequestBody UserDTO user) {
+    public ResponseEntity<SessionHolderDTO> login(@RequestBody UserDTO user) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
         );
         final String sessionId = sessionRegistry.registerSession(user.getUsername());
-        final SessionHolder response = new SessionHolder(sessionId);
+        final SessionHolderDTO response = new SessionHolderDTO(sessionId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<SessionHolder> register(@RequestBody UserDTO user) {
-        UserEntity userEntity = userDtoToUserEntityWithEncrypt(user);
-//        TODO: Validator for user: is user by username not exist
-        userRepository.save(userEntity);
+    public ResponseEntity<SessionHolderDTO> register(@RequestBody UserDTO user) {
+        final String username = user.getUsername();
+
+        if (userRepository.existsByUsername(username)) {
+            throw new UserAlreadyExistException(username);
+        } else {
+            UserEntity userEntity = userDtoToUserEntityWithEncrypt(user);
+            userRepository.save(userEntity);
+        }
+
         return login(user);
     }
 
