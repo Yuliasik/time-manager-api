@@ -1,6 +1,6 @@
 package com.timemanager.security;
 
-import com.timemanager.exception.IncorrectPassword;
+import com.timemanager.exception.IncorrectPasswordException;
 import com.timemanager.exception.UserAlreadyExistException;
 import com.timemanager.exception.UserNotExistException;
 import com.timemanager.security.session.SessionHolderDTO;
@@ -34,7 +34,7 @@ public class AuthenticationService {
             throw new UserNotExistException(username);
         }
         if (!passwordEncoder.matches(password, userRepository.getPasswordByUsername(username))) {
-            throw new IncorrectPassword();
+            throw new IncorrectPasswordException();
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
@@ -52,7 +52,6 @@ public class AuthenticationService {
             UserEntity userEntity = userDtoToUserEntityWithEncrypt(user);
             userRepository.save(userEntity);
         }
-
         return login(user);
     }
 

@@ -18,8 +18,8 @@ public class ExceptionController {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = IncorrectPassword.class)
-    public ResponseEntity<Object> incorrectPassword(IncorrectPassword exception) {
+    @ExceptionHandler(value = IncorrectPasswordException.class)
+    public ResponseEntity<Object> incorrectPassword(IncorrectPasswordException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }
