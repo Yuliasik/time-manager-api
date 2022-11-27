@@ -12,4 +12,14 @@ public class ExceptionController {
     public ResponseEntity<Object> userAlreadyExistException(UserAlreadyExistException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(value = UserNotExistException.class)
+    public ResponseEntity<Object> userNotExistException(UserNotExistException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = IncorrectPasswordException.class)
+    public ResponseEntity<Object> incorrectPassword(IncorrectPasswordException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
 }
