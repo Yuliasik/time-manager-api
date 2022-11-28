@@ -40,7 +40,8 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(username, password)
         );
         final String sessionId = sessionRegistry.registerSession(username);
-        return new SessionHolderDTO(sessionId);
+        final UserEntity byUsername = userRepository.getByUsername(username);
+        return new SessionHolderDTO(sessionId, byUsername.getId());
     }
 
     public SessionHolderDTO register(@RequestBody UserDTO user) {

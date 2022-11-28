@@ -9,4 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SessionHolderDTO {
     private String sessionId;
+    private Long userId;
 }
