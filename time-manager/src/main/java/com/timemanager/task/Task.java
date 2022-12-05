@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -35,6 +36,8 @@ public class Task {
     @NotBlank
     private String title;
     @NotBlank
+
+    @Column(columnDefinition = "text", length = 500)
     private String description;
 
     @NotNull

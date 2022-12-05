@@ -2,7 +2,11 @@ package com.timemanager.task;
 
 import com.timemanager.exception.EntityNotFoundException;
 import com.timemanager.exception.EntityValidationFailedException;
+import com.timemanager.security.currentuser.CurrentUser;
+import com.timemanager.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +23,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskValidator taskValidator;
+    private final UserRepository userRepository;
     private final TaskMapper taskMapper;
 
     /**
@@ -26,8 +31,12 @@ public class TaskService {
      *
      * @return Map<LocalDate, Task> object and 200 Http status.
      */
-    public Map<LocalDate, List<Task>> getAllByUserId(Long userId) {
-        return taskRepository.findAllByUserId(userId).stream()
+    public Map<LocalDate, List<Task>> getAllByUserId(Pageable pageable) {
+        final CurrentUser user = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return taskRepository.findAllByUserIdPageableByNotesFromToday(
+                        userRepository.getByUsername(user.getUsername()).getId(), pageable
+                )
+                .stream()
                 .collect(Collectors.groupingBy(Task::getPerformanceDate));
     }
 
