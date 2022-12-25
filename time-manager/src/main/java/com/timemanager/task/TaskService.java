@@ -3,6 +3,9 @@ package com.timemanager.task;
 import com.timemanager.exception.EntityNotFoundException;
 import com.timemanager.exception.EntityValidationFailedException;
 import com.timemanager.security.currentuser.CurrentUser;
+import com.timemanager.task.dto.TaskCreateDto;
+import com.timemanager.task.dto.TaskUpdateDto;
+import com.timemanager.task.dto.TaskUpdateStateDto;
 import com.timemanager.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -60,28 +63,23 @@ public class TaskService {
      */
     public Task create(TaskCreateDto taskCreateDto) {
         final Task task = taskMapper.fromCreateDto(taskCreateDto);
-        String error = taskValidator.validate(task);
-        if (error.length() > 0) {
-            throw new EntityValidationFailedException(error);
-        }
+        errorHandling(task);
         return taskRepository.save(task);
     }
 
     /**
      * Method to update task if exist or else throw errors.
      *
-     * @param task {@link Task} to update.
+     * @param taskUpdateDto {@link TaskUpdateDto} to update.
      * @return updated {@link Task}
      */
-    public Task update(Task task) {
+    public Task update(TaskUpdateDto taskUpdateDto) {
+        final Task task = taskMapper.fromUpdateDto(taskUpdateDto);
         Long taskId = task.getId();
         if (taskId == null) {
             throw new EntityNotFoundException("Task", taskId);
         }
-        String error = taskValidator.validate(task);
-        if (error.length() > 0) {
-            throw new EntityValidationFailedException(error);
-        }
+        errorHandling(task);
         return taskRepository.save(task);
     }
 
@@ -92,6 +90,25 @@ public class TaskService {
      */
     public void delete(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    /**
+     * Method to change state of task.
+     *
+     * @param taskUpdateStateDto {@link TaskUpdateStateDto} to update.
+     */
+    public void changeState(TaskUpdateStateDto taskUpdateStateDto) {
+        final Long id = taskUpdateStateDto.getId();
+        final Task referenceById = taskRepository.getReferenceById(id);
+        referenceById.setState(taskUpdateStateDto.getState());
+        taskRepository.save(referenceById);
+    }
+
+    private void errorHandling(Task task) {
+        String error = taskValidator.validate(task);
+        if (error.length() > 0) {
+            throw new EntityValidationFailedException(error);
+        }
     }
 
 }

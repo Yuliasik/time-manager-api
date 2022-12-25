@@ -15,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.time.LocalDate;
 
 @Data
@@ -41,7 +40,7 @@ public class Task {
     private String description;
 
     @NotNull
-    private Duration approximatePerformanceTime;
+    private String approximatePerformanceTime;
 
     @NotNull
     private LocalDate performanceDate;

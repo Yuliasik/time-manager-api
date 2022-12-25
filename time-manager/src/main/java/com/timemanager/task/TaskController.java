@@ -1,5 +1,8 @@
 package com.timemanager.task;
 
+import com.timemanager.task.dto.TaskCreateDto;
+import com.timemanager.task.dto.TaskUpdateDto;
+import com.timemanager.task.dto.TaskUpdateStateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -7,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -76,7 +80,7 @@ public class TaskController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Task update(@RequestBody @NotNull Task task) {
+    public Task update(@RequestBody @NotNull TaskUpdateDto task) {
         return taskService.update(task);
     }
 
@@ -90,4 +94,11 @@ public class TaskController {
     public void delete(@PathVariable Long id) {
         taskService.delete(id);
     }
+
+    @PatchMapping("/changeState")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeState(@RequestBody TaskUpdateStateDto updateStateDto) {
+        taskService.changeState(updateStateDto);
+    }
+
 }
