@@ -1,4 +1,4 @@
-package com.timemanager.task;
+package com.timemanager.task.dto;
 
 import lombok.Builder;
 import lombok.Getter;
