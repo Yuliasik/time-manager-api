@@ -1,8 +1,7 @@
 package com.timemanager.security;
 
-import com.timemanager.exception.IncorrectPasswordException;
+import com.timemanager.exception.AuthorizationException;
 import com.timemanager.exception.UserAlreadyExistException;
-import com.timemanager.exception.UserNotExistException;
 import com.timemanager.security.session.SessionHolderDTO;
 import com.timemanager.security.session.SessionRegistry;
 import com.timemanager.user.UserDTO;
@@ -30,11 +29,8 @@ public class AuthenticationService {
     public SessionHolderDTO login(@RequestBody UserDTO user) {
         final String username = user.getUsername();
         final String password = user.getPassword();
-        if (Boolean.FALSE.equals(userRepository.existsByUsername(username))) {
-            throw new UserNotExistException(username);
-        }
-        if (!passwordEncoder.matches(password, userRepository.getPasswordByUsername(username))) {
-            throw new IncorrectPasswordException();
+        if (isUserNotExist(username) || isIncorrectPassword(password, username)) {
+            throw new AuthorizationException();
         }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
@@ -61,6 +57,14 @@ public class AuthenticationService {
                 .username(userDTO.getUsername())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .build();
+    }
+
+    private boolean isUserNotExist(String username) {
+        return Boolean.FALSE.equals(userRepository.existsByUsername(username));
+    }
+
+    private boolean isIncorrectPassword(String password, String username) {
+        return !passwordEncoder.matches(password, userRepository.getPasswordByUsername(username));
     }
 
 }
