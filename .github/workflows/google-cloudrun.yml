@@ -121,9 +121,9 @@ jobs:
             --project ${{ env.PROJECT_ID }} \
             --format json \
             --allow-unauthenticated \
-            --set-env-vars DB_URL=jdbc:postgresql://35.223.227.39:5432/time_manager \
-            --set-env-vars DB_PASSWORD=$.PZnDsI_<G#SKmL \
-            --set-env-vars DB_USERNAME=postgres-internal
+            --set-env-vars 'DB_URL=jdbc:postgresql://35.223.227.39:5432/time_manager' \
+            --set-env-vars 'DB_PASSWORD=$.PZnDsI_<G#SKmL' \
+            --set-env-vars 'DB_USERNAME=postgres-internal'
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
