@@ -51,10 +51,10 @@ on:
 
 env:
   PROJECT_ID: time-manager-375414
-  GAR_LOCATION: us-central1-b # TODO: update Artifact Registry location
+  GAR_LOCATION: us-central1 # TODO: update Artifact Registry location
   REPOSITORY: time-manager-repository
   SERVICE: time-manager-api # TODO: update Cloud Run service name
-  REGION: us-central1-b # TODO: update Cloud Run service region
+  REGION: us-central1 # TODO: update Cloud Run service region
 
 jobs:
   deploy:
