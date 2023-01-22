@@ -45,9 +45,8 @@
 name: Build and Deploy to Cloud Run
 
 on:
-#  push:
-#    branches: [ "master" ]
-  workflow_dispatch:
+ push:
+   branches: [ "master" ]
 
 env:
   PROJECT_ID: time-manager-375414
