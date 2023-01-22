@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         httpServletResponse.setStatus(HttpServletResponse.SC_OK)).and();
 
         http.authorizeRequests()
-                .antMatchers("/api/login", "/api/register", "/api/logout").permitAll()
+                .antMatchers("/api/login", "/api/register", "/api/logout", "/api/test").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(sessionFilter, UsernamePasswordAuthenticationFilter.class);
