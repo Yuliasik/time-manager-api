@@ -17,4 +17,5 @@ public class TaskUpdateDto {
     private String endDate;
     private String approximatePerformanceTime;
     private TaskState state;
+    private Integer priority;
 }

@@ -1,5 +1,10 @@
 package com.timemanager.task;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.timemanager.exception.EntityNotFoundException;
 import com.timemanager.exception.EntityValidationFailedException;
 import com.timemanager.security.currentuser.CurrentUser;
@@ -12,11 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * Service layout to work with {@link TaskRepository}.
  */
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskPlanningService taskPlanningService;
     private final TaskValidator taskValidator;
     private final UserRepository userRepository;
     private final TaskMapper taskMapper;
@@ -64,7 +65,9 @@ public class TaskService {
     public Task create(TaskCreateDto taskCreateDto) {
         final Task task = taskMapper.fromCreateDto(taskCreateDto);
         errorHandling(task);
-        return taskRepository.save(task);
+        Task save = taskRepository.save(task);
+        taskPlanningService.planTasksByDays();
+        return save;
     }
 
     /**
@@ -80,7 +83,9 @@ public class TaskService {
             throw new EntityNotFoundException("Task", taskId);
         }
         errorHandling(task);
-        return taskRepository.save(task);
+        Task save = taskRepository.save(task);
+        taskPlanningService.planTasksByDays();
+        return save;
     }
 
     /**
@@ -90,6 +95,7 @@ public class TaskService {
      */
     public void delete(Long id) {
         taskRepository.deleteById(id);
+        taskPlanningService.planTasksByDays();
     }
 
     /**
