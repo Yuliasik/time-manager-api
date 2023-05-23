@@ -1,5 +1,6 @@
 package com.timemanager.task;
 
+import com.timemanager.validator.RestValidator;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class TaskValidator {
+public class TaskValidator implements RestValidator<Task> {
 
     private static final String PREFIX = "Task contains validation errors: ";
 

@@ -10,6 +10,8 @@ import java.util.Map;
 
 import com.timemanager.security.currentuser.CurrentUser;
 import com.timemanager.user.UserRepository;
+import com.timemanager.user.settings.SettingsService;
+import com.timemanager.user.settings.UserSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,12 @@ public class TaskPlanningService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final SettingsService settingsService;
 
     public void planTasksByDays() {
-        int durationHours = 8;
-        double bufferPercentage = 15;
+        final UserSettings userSettings = settingsService.getAllSettingsByUserId();
+        int durationHours = userSettings.getDurationHour();
+        double bufferPercentage = userSettings.getBufferPercentage();
         Duration durationPerDay = calculateDuration(durationHours, bufferPercentage);
 
         final CurrentUser user = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

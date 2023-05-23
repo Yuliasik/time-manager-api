@@ -1,7 +1,7 @@
 package com.timemanager.security;
 
-import com.timemanager.security.session.SessionHolderDTO;
-import com.timemanager.user.UserDTO;
+import com.timemanager.security.session.SessionHolderDto;
+import com.timemanager.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,14 +17,14 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<SessionHolderDTO> login(@RequestBody UserDTO user) {
-        final SessionHolderDTO response = authenticationService.login(user);
+    public ResponseEntity<SessionHolderDto> login(@RequestBody UserDto user) {
+        final SessionHolderDto response = authenticationService.login(user);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<SessionHolderDTO> register(@RequestBody UserDTO user) {
-        final SessionHolderDTO response = authenticationService.register(user);
+    public ResponseEntity<SessionHolderDto> register(@RequestBody UserDto user) {
+        final SessionHolderDto response = authenticationService.register(user);
         return ResponseEntity.ok(response);
     }
 

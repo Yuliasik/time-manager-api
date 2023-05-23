@@ -2,11 +2,12 @@ package com.timemanager.security;
 
 import com.timemanager.exception.AuthorizationException;
 import com.timemanager.exception.UserAlreadyExistException;
-import com.timemanager.security.session.SessionHolderDTO;
+import com.timemanager.security.session.SessionHolderDto;
 import com.timemanager.security.session.SessionRegistry;
-import com.timemanager.user.UserDTO;
 import com.timemanager.user.UserEntity;
 import com.timemanager.user.UserRepository;
+import com.timemanager.user.dto.UserDto;
+import com.timemanager.user.settings.SettingsService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,50 +22,56 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
-    private final AuthenticationManager authenticationManager;
-    private final SessionRegistry sessionRegistry;
-    private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+  private final AuthenticationManager authenticationManager;
+  private final SessionRegistry sessionRegistry;
+  private final PasswordEncoder passwordEncoder;
+  private final SettingsService settingsService;
 
-    public SessionHolderDTO login(@RequestBody UserDTO user) {
-        final String username = user.getUsername();
-        final String password = user.getPassword();
-        if (isUserNotExist(username) || isIncorrectPassword(password, username)) {
-            throw new AuthorizationException();
-        }
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-        );
-        final String sessionId = sessionRegistry.registerSession(username);
-        final UserEntity byUsername = userRepository.getByUsername(username);
-        return new SessionHolderDTO(sessionId, byUsername.getId());
+  public SessionHolderDto login(@RequestBody UserDto user) {
+    final String username = user.getUsername();
+    final String password = user.getPassword();
+    if (isUserNotExist(username) || isIncorrectPassword(password, username)) {
+      throw new AuthorizationException();
     }
+    authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(username, password)
+    );
+    final String sessionId = sessionRegistry.registerSession(username);
+    final UserEntity byUsername = userRepository.getByUsername(username);
+    return new SessionHolderDto(sessionId, byUsername.getId());
+  }
 
-    public SessionHolderDTO register(@RequestBody UserDTO user) {
-        final String username = user.getUsername();
+  public SessionHolderDto register(@RequestBody UserDto user) {
+    final String username = user.getUsername();
 
-        if (Boolean.TRUE.equals(userRepository.existsByUsername(username))) {
-            throw new UserAlreadyExistException(username);
-        } else {
-            UserEntity userEntity = userDtoToUserEntityWithEncrypt(user);
-            userRepository.save(userEntity);
-        }
-        return login(user);
+    if (Boolean.TRUE.equals(userRepository.existsByUsername(username))) {
+      throw new UserAlreadyExistException(username);
+    } else {
+      UserEntity userEntity = userDtoToUserEntityWithEncrypt(user);
+      final UserEntity savedUser = userRepository.save(userEntity);
+      settingsService.createWithDefaultSettingValue(savedUser);
     }
+    return login(user);
+      }
 
-    private UserEntity userDtoToUserEntityWithEncrypt(UserDTO userDTO) {
-        return UserEntity.builder()
-                .username(userDTO.getUsername())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .build();
-    }
+  private UserEntity userDtoToUserEntityWithEncrypt(UserDto userDTO) {
+    return UserEntity.builder()
+        .username(userDTO.getUsername())
+        .password(passwordEncoder.encode(userDTO.getPassword()))
+        .build();
+  }
 
-    private boolean isUserNotExist(String username) {
-        return Boolean.FALSE.equals(userRepository.existsByUsername(username));
-    }
+  private boolean isUserNotExist(String username) {
+    return Boolean.FALSE.equals(userRepository.existsByUsername(username));
+  }
 
-    private boolean isIncorrectPassword(String password, String username) {
-        return !passwordEncoder.matches(password, userRepository.getPasswordByUsername(username));
-    }
+  private boolean isIncorrectPassword(String password, String username) {
+    return !passwordEncoder.matches(password, userRepository.getPasswordByUsername(username));
+  }
+
+  private void setDefaultSettings() {
+
+  }
 
 }
