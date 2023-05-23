@@ -53,7 +53,7 @@ public class AuthenticationService {
       settingsService.createWithDefaultSettingValue(savedUser);
     }
     return login(user);
-      }
+  }
 
   private UserEntity userDtoToUserEntityWithEncrypt(UserDto userDTO) {
     return UserEntity.builder()
@@ -68,10 +68,6 @@ public class AuthenticationService {
 
   private boolean isIncorrectPassword(String password, String username) {
     return !passwordEncoder.matches(password, userRepository.getPasswordByUsername(username));
-  }
-
-  private void setDefaultSettings() {
-
   }
 
 }

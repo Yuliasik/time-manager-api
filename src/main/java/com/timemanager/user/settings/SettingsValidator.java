@@ -1,7 +1,5 @@
 package com.timemanager.user.settings;
 
-import com.timemanager.task.Task;
-import com.timemanager.task.TaskState;
 import com.timemanager.validator.RestValidator;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,7 @@ public class SettingsValidator implements RestValidator<UserSettings> {
       userSettings.setDurationHour(8);
     }
 
-    if(userSettings.getDurationHour() > 24){
+    if (userSettings.getDurationHour() > 24) {
       errors.add("Duration hours cannot be more than 24");
     }
 
@@ -34,7 +32,7 @@ public class SettingsValidator implements RestValidator<UserSettings> {
       userSettings.setBufferPercentage(10);
     }
 
-    if(userSettings.getBufferPercentage() > 100){
+    if (userSettings.getBufferPercentage() > 100) {
       errors.add("Buffer percentage cannot be more than 100");
     }
 
