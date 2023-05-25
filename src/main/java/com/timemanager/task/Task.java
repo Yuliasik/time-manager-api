@@ -27,7 +27,6 @@ import java.time.LocalDate;
 @Data
 @Entity
 @SuperBuilder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
@@ -47,8 +46,8 @@ public class Task {
 
   @NotBlank
   private String title;
-  @NotBlank
 
+  @NotBlank
   @Column(columnDefinition = "text", length = 500)
   private String description;
 
