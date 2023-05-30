@@ -12,5 +12,6 @@ public class TaskUpdateStateDto {
 
     private Long id;
     private TaskState state;
+    private String performanceTime;
 
 }

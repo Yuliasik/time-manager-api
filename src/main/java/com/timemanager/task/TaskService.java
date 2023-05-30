@@ -2,15 +2,19 @@ package com.timemanager.task;
 
 import com.timemanager.exception.EntityNotFoundException;
 import com.timemanager.security.currentuser.CurrentUser;
+import com.timemanager.task.calculated.CalculatedTask;
+import com.timemanager.task.calculated.CalculatedTaskRepository;
 import com.timemanager.task.dto.TaskCreateDto;
 import com.timemanager.task.dto.TaskUpdateDto;
 import com.timemanager.task.dto.TaskUpdateStateDto;
 import com.timemanager.user.UserRepository;
+import com.timemanager.utils.DurationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 public class TaskService {
 
   private final TaskRepository taskRepository;
+  private final CalculatedTaskRepository calculatedTaskRepository;
   private final TaskPlanningService taskPlanningService;
   private final TaskValidator taskValidator;
   private final UserRepository userRepository;
@@ -34,13 +39,13 @@ public class TaskService {
    *
    * @return Map<LocalDate, Task> object and 200 Http status.
    */
-  public Map<LocalDate, List<Task>> getAllByUserId(Pageable pageable) {
+  public Map<LocalDate, List<CalculatedTask>> getAllByUserId(Pageable pageable) {
     final CurrentUser user = (CurrentUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return taskRepository.findAllByUserIdPageableByNotesFromToday(
+    return calculatedTaskRepository.findAllByUserIdPageableByNotesFromToday(
             userRepository.getByUsername(user.getUsername()).getId(), pageable
         )
         .stream()
-        .collect(Collectors.groupingBy(Task::getPerformanceDate));
+        .collect(Collectors.groupingBy(CalculatedTask::getPerformanceDate));
   }
 
   /**
@@ -105,7 +110,15 @@ public class TaskService {
   public void changeState(TaskUpdateStateDto taskUpdateStateDto) {
     final Long id = taskUpdateStateDto.getId();
     final Task referenceById = taskRepository.getReferenceById(id);
-    referenceById.setState(taskUpdateStateDto.getState());
+    if (taskUpdateStateDto.getPerformanceTime().equals(referenceById.getApproximatePerformanceTime())) {
+      referenceById.setState(taskUpdateStateDto.getState());
+    } else {
+      Duration taskDuration = DurationUtils.getTaskDuration(referenceById);
+      Duration completedDuration = DurationUtils.durationFromString(taskUpdateStateDto.getPerformanceTime());
+      Duration minused = taskDuration.minus(completedDuration);
+      String minusedString = DurationUtils.stringFromDuration(minused);
+      referenceById.setApproximatePerformanceTime(minusedString);
+    }
     taskRepository.save(referenceById);
   }
 

@@ -30,16 +30,16 @@ public class TaskValidator implements RestValidator<Task> {
             errors.add("Length of description must be lower than 500");
         }
 
-        if (Objects.isNull(task.getPerformanceDate())) {
-            task.setPerformanceDate(task.getStartDate());
-        }
-
         if (Objects.isNull(task.getUserId())) {
             errors.add("User id cannot be null");
         }
 
         if (Objects.isNull(task.getState())) {
             task.setState(TaskState.PLANNED);
+        }
+
+        if (Objects.isNull(task.getPriority())) {
+            errors.add("Priority cannot be null");
         }
 
         if (!errors.isEmpty()) {

@@ -18,4 +18,10 @@ public class ExceptionController {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<Object> exception(Exception exception) {
+        exception.printStackTrace();
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

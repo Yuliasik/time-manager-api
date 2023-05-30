@@ -31,7 +31,7 @@ public class SettingsController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<UserSettings> getAllSettingsByUserId() {
-    return ResponseEntity.ok(settingsService.getAllSettingsByUserId());
+    return ResponseEntity.ok(settingsService.getAllSettingsOfCurrentUser());
   }
 
   /**

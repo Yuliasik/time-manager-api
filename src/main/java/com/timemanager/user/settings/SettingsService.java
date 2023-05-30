@@ -26,7 +26,7 @@ public class SettingsService {
    *
    * @return List<UserSettings> object and 200 Http status.
    */
-  public UserSettings getAllSettingsByUserId() {
+  public UserSettings getAllSettingsOfCurrentUser() {
     return settingsRepository.findByUserId(
         getCurrentUser().getId()
     );

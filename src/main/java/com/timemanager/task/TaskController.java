@@ -1,5 +1,6 @@
 package com.timemanager.task;
 
+import com.timemanager.task.calculated.CalculatedTask;
 import com.timemanager.task.dto.TaskCreateDto;
 import com.timemanager.task.dto.TaskUpdateDto;
 import com.timemanager.task.dto.TaskUpdateStateDto;
@@ -41,7 +42,7 @@ public class TaskController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map<LocalDate, List<Task>>> getAllByUserId(
+    public ResponseEntity<Map<LocalDate, List<CalculatedTask>>> getAllByUserId(
             @PageableDefault(size = 12) Pageable pageable
     ) {
         return ResponseEntity.ok(taskService.getAllByUserId(pageable));
