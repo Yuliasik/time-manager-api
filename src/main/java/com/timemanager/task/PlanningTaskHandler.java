@@ -41,7 +41,7 @@ public class PlanningTaskHandler {
 
   private List<Task> prepareTasks(List<Task> all) {
     return new ArrayList<>(all.stream()
-        .sorted(COMPARATOR_BY_WAGES)
+        .sorted(COMPARATOR_BY_WAGES.reversed())
         .toList());
   }
 
