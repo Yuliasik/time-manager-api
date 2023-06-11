@@ -1,11 +1,13 @@
-package com.timemanager.task;
+package com.timemanager.task.calculated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.timemanager.task.TaskState;
 import com.timemanager.user.UserEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,10 +27,10 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
+public class CalculatedTask {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +45,10 @@ public class Task {
   @Column(name = "user_id")
   private Long userId;
 
+  @NotNull
+  @Column(name = "original_task_id")
+  private Long originalTaskId;
+
   @NotBlank
   private String title;
 
@@ -53,6 +59,8 @@ public class Task {
   @NotNull
   private String approximatePerformanceTime;
 
+  @NotNull
+  private LocalDate performanceDate;
   @NotNull
   private LocalDate startDate;
   @NotNull
@@ -66,5 +74,8 @@ public class Task {
   @Min(1)
   @Max(5)
   private Integer priority;
+
+  @ColumnDefault("false")
+  private boolean divided;
 
 }

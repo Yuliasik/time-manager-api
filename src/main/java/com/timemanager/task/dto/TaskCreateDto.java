@@ -15,5 +15,6 @@ public class TaskCreateDto {
     private String startDate;
     private String endDate;
     private String approximatePerformanceTime;
+    private Integer priority;
 
 }

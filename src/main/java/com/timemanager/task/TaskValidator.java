@@ -1,5 +1,6 @@
 package com.timemanager.task;
 
+import com.timemanager.validator.RestValidator;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class TaskValidator {
+public class TaskValidator implements RestValidator<Task> {
 
     private static final String PREFIX = "Task contains validation errors: ";
 
@@ -29,16 +30,16 @@ public class TaskValidator {
             errors.add("Length of description must be lower than 500");
         }
 
-        if (Objects.isNull(task.getPerformanceDate())) {
-            task.setPerformanceDate(task.getStartDate());
-        }
-
         if (Objects.isNull(task.getUserId())) {
             errors.add("User id cannot be null");
         }
 
         if (Objects.isNull(task.getState())) {
             task.setState(TaskState.PLANNED);
+        }
+
+        if (Objects.isNull(task.getPriority())) {
+            errors.add("Priority cannot be null");
         }
 
         if (!errors.isEmpty()) {

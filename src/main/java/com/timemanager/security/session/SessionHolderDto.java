@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SessionHolderDTO {
+public class SessionHolderDto {
     private String sessionId;
     private Long userId;
 }

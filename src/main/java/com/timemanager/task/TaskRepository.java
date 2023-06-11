@@ -1,6 +1,5 @@
 package com.timemanager.task;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,14 +13,14 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    @Query(value = "SELECT DISTINCT(t.performanceDate) FROM Task t WHERE t.userId=:userId AND t.performanceDate>=:date ORDER BY t.performanceDate")
-    List<LocalDate> findAllNotesByUserIdFromDate(Long userId, LocalDate date, Pageable pageable);
+    @Query(value = """
+            SELECT t
+            FROM Task t
+            WHERE t.userId=:userId AND (t.endDate>=:date)""")
+    List<Task> findAllTasksByUserIdFromDate(Long userId, LocalDate date);
 
-    List<Task> findAllByUserIdAndPerformanceDateIn(Long userId, List<LocalDate> performanceDates);
-
-    default List<Task> findAllByUserIdPageableByNotesFromToday(Long userId, Pageable pageable) {
-        final List<LocalDate> allNotesPageable = this.findAllNotesByUserIdFromDate(userId, LocalDate.now(), pageable);
-        return this.findAllByUserIdAndPerformanceDateIn(userId, allNotesPageable);
+    default List<Task> findAllByUserIdFromToday(Long userId) {
+        return findAllTasksByUserIdFromDate(userId, LocalDate.now());
     }
 
 }
