@@ -63,9 +63,6 @@ public class PlanningTaskHandler {
           taskIdsToBeRemoved.add(task.getId());
         } else if (!iDateTasksDuration.equals(durationPerDay)) {
           Task croppedTask = cropTask(task, iDateTasksDuration);
-          if (croppedTask == null) {
-            continue;
-          }
           lastDividedTaskId = task.getId();
           addTaskToResult(croppedTask, iDateTasks);
           break;
@@ -121,9 +118,6 @@ public class PlanningTaskHandler {
 
   private Task cropTask(Task task, Duration iDateTasksDuration) {
     Duration durationLeft = getDurationLeftForIDate(iDateTasksDuration);
-    if (durationLeft == null) {
-      return null;
-    }
     Duration minused = DurationUtils.getTaskDuration(task).minus(durationLeft);
     removeAllTasks(List.of(task.getId()));
     Task build = taskMapper.customCopy(task, DurationUtils.stringFromDuration(minused));
@@ -133,10 +127,7 @@ public class PlanningTaskHandler {
 
   private Duration getDurationLeftForIDate(Duration iDateTasksDuration) {
     long minutesOfDay = DurationUtils.getFullMinutes(durationPerDay);
-    long minutesOfTasks = DurationUtils.getMinutes(iDateTasksDuration);
-    if (minutesOfDay <= minutesOfTasks) {
-      return null;
-    }
+    long minutesOfTasks = DurationUtils.getFullMinutes(iDateTasksDuration);
     final long minutesLeft = minutesOfDay - minutesOfTasks;
     return Duration.ofMinutes(minutesLeft);
   }
